@@ -3,7 +3,10 @@ from pprint import pprint as pp
 import json
 from datetime import date
 import babel.numbers
+import argparse
 
+
+version = '[1.0]'
 
 
 ###This script will be used to fetch the national debt from the US treasury API
@@ -33,14 +36,28 @@ def get_debtToThePenny():
     return response
 
 def main():
-    data = get_debtToThePenny().get('data')
-    for i in data:
-        record_date = i['record_date']
+    #ARG PARSE OPTIONS
+    parser = argparse.ArgumentParser(
+        prog = 'National Debt Tracker',
+        description = 'Get a simple view of the current national debt',
+        epilog = "Makes you sad, doesn't it"
+    )
+    parser.add_argument('-v', '--version', action='store_true', help='get current version')
+    args = parser.parse_args()
 
-        """BABEL Docs:https://stackabuse.com/format-number-as-currency-string-in-python/"""
-        total_debt = babel.numbers.format_currency(i['tot_pub_debt_out_amt'], "USD", locale='en_US')
+    if args.version:
+        print(version)
 
-        pp(f'The current national debt as of {record_date} is {total_debt}')
+    else:
+    #GET DEBT
+        data = get_debtToThePenny().get('data')
+        for i in data:
+            record_date = i['record_date']
+
+            """BABEL Docs:https://stackabuse.com/format-number-as-currency-string-in-python/"""
+            total_debt = babel.numbers.format_currency(i['tot_pub_debt_out_amt'], "USD", locale='en_US')
+
+            pp(f'The current national debt as of {record_date} is {total_debt}')
 
 if __name__ == '__main__':
     main()

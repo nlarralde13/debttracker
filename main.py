@@ -6,7 +6,7 @@ import babel.numbers
 import argparse
 
 
-version = '[1.0]'
+version = '[1.1]'
 
 
 ###This script will be used to fetch the national debt from the US treasury API
